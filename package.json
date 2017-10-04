@@ -1,6 +1,6 @@
 {
   "name": "simple-evaluate",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "keywords": [],
   "main": "dist/simple-evaluate.umd.js",
@@ -30,7 +30,9 @@
     "report-coverage": "cat ./coverage/lcov.info | coveralls",
     "commit": "git-cz",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "semantic-release-prepare": "ts-node tools/semantic-release-prepare"
+    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
+    "prepush": "npm run test:prod && npm run build",
+    "commitmsg": "validate-commit-msg"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -91,7 +93,7 @@
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "semantic-release": "^8.0.0",
+    "semantic-release": "^8.0.3",
     "should": "^13.1.0",
     "ts-jest": "^21.0.0",
     "ts-node": "^3.0.6",
