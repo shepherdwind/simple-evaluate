@@ -12,6 +12,7 @@ describe("simple evaluate", () => {
       '1 * (2 + 3 * (4 - 3)) > 10 - 2 || 3 * 2 > 9 - 2 * 3');
     ret1.should.equal(true);
     evaluate(null, '(9 - 2) * 3 - 10').should.equal(11);
+    evaluate(null, '12 - 2 * -2 + (3 - 4) * 3.1').should.equal(12.9);
 
     [
       '9 / 12 + 12 * 3 - 5',

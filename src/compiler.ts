@@ -21,6 +21,7 @@ export interface Node {
   left: Node | string | null;
   right: Node | string | null;
   expr: string;
+  grouped?: boolean;
 };
 
 export default class Compiler {
@@ -75,6 +76,10 @@ export default class Compiler {
       this.blockLevel += 1;
       const node = this.parse();
       this.blockLevel -= 1;
+
+      if (typeof node !== 'string') {
+        node.grouped = true;
+      }
       return node;
     }
 
@@ -88,7 +93,7 @@ export default class Compiler {
 
     // 3 > -12 or -12 + 10
     if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
-      return { left: '0', expr: token, right: this.parseStatement() };
+      return { left: '0', expr: token, right: this.parseStatement(), grouped: true };
     }
 
     return token;
@@ -106,11 +111,11 @@ export default class Compiler {
   addNode(expr: string, right: Node | string | null, root: Node) {
     let pre = root;
     // 增加右节点
-    if (this.compare(pre.expr, expr) < 0) {
+    if (this.compare(pre.expr, expr) < 0 && !pre.grouped) {
       // 依次找到最右一个节点
       while (pre.right !== null &&
         typeof pre.right !== 'string' &&
-        this.compare(pre.right.expr, expr) < 0) {
+        this.compare(pre.right.expr, expr) < 0 && !pre.right.grouped) {
         pre = pre.right;
       }
 
