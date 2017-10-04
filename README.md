@@ -9,10 +9,10 @@
 [npm-url]: http://npmjs.org/package/simple-evaluate
 [download-image]: https://img.shields.io/npm/dm/simple-evaluate.svg?style=flat-square
 [download-url]: https://npmjs.org/package/simple-evaluate
-[travis-image]: https://img.shields.io/travis/shepherdwind/velocity.js.svg?style=flat-square
-[travis-url]: https://travis-ci.org/shepherdwind/velocity.js
-[coveralls-image]: https://img.shields.io/coveralls/shepherdwind/velocity.js.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/shepherdwind/velocity.js?branch=master
+[travis-image]: https://img.shields.io/travis/shepherdwind/simple-evaluate.svg?style=flat-square
+[travis-url]: https://travis-ci.org/shepherdwind/simple-evaluate
+[coveralls-image]: https://img.shields.io/coveralls/shepherdwind/simple-evaluate.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/shepherdwind/simple-evaluate?branch=master
 
 
 A safe parse for simple js expression.
