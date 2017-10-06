@@ -40,6 +40,7 @@ export default function token(expression: string): string[] {
       case '-':
       case '*':
       case '/':
+      case '%':
       case '>':
       case '<':
         // >= <=

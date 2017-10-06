@@ -1,10 +1,10 @@
-
 import get from 'get-value';
 
-const OPERATION: { [key: string]: number } = {
+export const OPERATION: { [key: string]: number } = {
   '!': 5,
   '*': 4,
   '/': 4,
+  '%': 4,
   '+': 3,
   '-': 3,
   '>': 2,
@@ -70,78 +70,6 @@ export default class Compiler {
     return root;
   }
 
-  parseStatement(): string | Node | null {
-    const token = this.nextToken();
-    if (token === '(') {
-      this.blockLevel += 1;
-      const node = this.parse();
-      this.blockLevel -= 1;
-
-      if (typeof node !== 'string') {
-        node.grouped = true;
-      }
-      return node;
-    }
-
-    if (token === ')') {
-      return null;
-    }
-
-    if (token === '!') {
-      return { left: null, expr: token, right: this.parseStatement() }
-    }
-
-    // 3 > -12 or -12 + 10
-    if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
-      return { left: '0', expr: token, right: this.parseStatement(), grouped: true };
-    }
-
-    return token;
-  }
-
-  nextToken() {
-    this.index += 1;
-    return this.token[this.index];
-  }
-
-  prevToken() {
-    return this.token[this.index - 1];
-  }
-
-  addNode(expr: string, right: Node | string | null, root: Node) {
-    let pre = root;
-    // 增加右节点
-    if (this.compare(pre.expr, expr) < 0 && !pre.grouped) {
-      // 依次找到最右一个节点
-      while (pre.right !== null &&
-        typeof pre.right !== 'string' &&
-        this.compare(pre.right.expr, expr) < 0 && !pre.right.grouped) {
-        pre = pre.right;
-      }
-
-      pre.right = {
-        expr,
-        left: pre.right,
-        right,
-      };
-      return root;
-    }
-
-    // 增加一个左节点
-    return {
-      left: pre,
-      right,
-      expr,
-    }
-  }
-
-  compare(a: string, b: string) {
-    if (!OPERATION.hasOwnProperty(a) || !OPERATION.hasOwnProperty(b)) {
-      throw new Error(`unknow operation ${a} or ${b}`);
-    }
-    return OPERATION[a] - OPERATION[b];
-  }
-
   calc(node: Node | string, context: any): any {
     if (typeof node === 'string') {
       return this.getValue(node, context);
@@ -193,7 +121,51 @@ export default class Compiler {
     }
   }
 
-  getValue(val: string | Node | null, context: any) {
+  private nextToken() {
+    this.index += 1;
+    return this.token[this.index];
+  }
+
+  private prevToken() {
+    return this.token[this.index - 1];
+  }
+
+  private addNode(expr: string, right: Node | string | null, root: Node) {
+    let pre = root;
+    // 增加右节点
+    if (this.compare(pre.expr, expr) < 0 && !pre.grouped) {
+      // 依次找到最右一个节点
+      while (pre.right !== null &&
+        typeof pre.right !== 'string' &&
+        this.compare(pre.right.expr, expr) < 0 && !pre.right.grouped) {
+        pre = pre.right;
+      }
+
+      pre.right = {
+        expr,
+        left: pre.right,
+        right,
+      };
+      return root;
+    }
+
+    // 增加一个左节点
+    return {
+      left: pre,
+      right,
+      expr,
+    }
+  }
+
+  private compare(a: string, b: string) {
+    if (!OPERATION.hasOwnProperty(a) || !OPERATION.hasOwnProperty(b)) {
+      throw new Error(`unknow operation ${a} or ${b}`);
+    }
+    return OPERATION[a] - OPERATION[b];
+  }
+
+
+  private getValue(val: string | Node | null, context: any) {
     if (typeof val !== 'string' && val !== null) {
       return this.calc(val, context);
     }
@@ -223,5 +195,34 @@ export default class Compiler {
 
     // 其他都算数字
     return parseFloat(val);
+  }
+
+  private parseStatement(): string | Node | null {
+    const token = this.nextToken();
+    if (token === '(') {
+      this.blockLevel += 1;
+      const node = this.parse();
+      this.blockLevel -= 1;
+
+      if (typeof node !== 'string') {
+        node.grouped = true;
+      }
+      return node;
+    }
+
+    if (token === ')') {
+      return null;
+    }
+
+    if (token === '!') {
+      return { left: null, expr: token, right: this.parseStatement() }
+    }
+
+    // 3 > -12 or -12 + 10
+    if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
+      return { left: '0', expr: token, right: this.parseStatement(), grouped: true };
+    }
+
+    return token;
   }
 }
