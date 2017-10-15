@@ -20,7 +20,7 @@ export const OPERATION: { [key: string]: number } = {
 export interface Node {
   left: Node | string | null;
   right: Node | string | null;
-  expr: string;
+  operation: string;
   grouped?: boolean;
 };
 
@@ -40,7 +40,7 @@ export default class Compiler {
     let root: any = {
       left: null,
       right: null,
-      expr: null,
+      operation: null,
     };
 
     do {
@@ -52,9 +52,9 @@ export default class Compiler {
 
       if (root.left === null) {
         root.left = tok;
-        root.expr = this.nextToken();
+        root.operation = this.nextToken();
         // 只有一个左节点 !!$foo
-        if (!root.expr) {
+        if (!root.operation) {
           return tok;
         }
 
@@ -76,22 +76,22 @@ export default class Compiler {
     }
 
     // 不支持的运算符号
-    if (OPERATION[node.expr] === undefined) {
-      throw new Error('unknow expression ' + node.expr);
+    if (OPERATION[node.operation] === undefined) {
+      throw new Error('unknow expression ' + node.operation);
     }
 
-    if (node.expr === '!' && node.right) {
+    if (node.operation === '!' && node.right) {
       return !this.getValue(node.right, context);
     }
 
     const left = this.getValue(node.left, context);
-    if (node.expr === undefined) {
+    if (node.operation === undefined) {
       return left;
     }
 
     const right = this.getValue(node.right, context);
 
-    switch(node.expr) {
+    switch(node.operation) {
       case '*':
         return left * right;
       case '/':
@@ -130,19 +130,19 @@ export default class Compiler {
     return this.token[this.index - 1];
   }
 
-  private addNode(expr: string, right: Node | string | null, root: Node) {
+  private addNode(operation: string, right: Node | string | null, root: Node) {
     let pre = root;
     // 增加右节点
-    if (this.compare(pre.expr, expr) < 0 && !pre.grouped) {
+    if (this.compare(pre.operation, operation) < 0 && !pre.grouped) {
       // 依次找到最右一个节点
       while (pre.right !== null &&
         typeof pre.right !== 'string' &&
-        this.compare(pre.right.expr, expr) < 0 && !pre.right.grouped) {
+        this.compare(pre.right.operation, operation) < 0 && !pre.right.grouped) {
         pre = pre.right;
       }
 
       pre.right = {
-        expr,
+        operation,
         left: pre.right,
         right,
       };
@@ -153,7 +153,7 @@ export default class Compiler {
     return {
       left: pre,
       right,
-      expr,
+      operation,
     }
   }
 
@@ -215,12 +215,12 @@ export default class Compiler {
     }
 
     if (token === '!') {
-      return { left: null, expr: token, right: this.parseStatement() }
+      return { left: null, operation: token, right: this.parseStatement() }
     }
 
     // 3 > -12 or -12 + 10
     if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
-      return { left: '0', expr: token, right: this.parseStatement(), grouped: true };
+      return { left: '0', operation: token, right: this.parseStatement(), grouped: true };
     }
 
     return token;
