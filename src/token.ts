@@ -11,7 +11,14 @@ export default function token(expression: string): string[] {
       case '|':
         if (expression[index + 1] === tok) {
           tokenList.push(expression.slice(prevIndex, index));
-          tokenList.push(tok + tok);
+          // ===
+          if (tok === '=' && expression[index + 2] === tok) {
+            index += 1;
+            prevIndex = index + 1;
+            tokenList.push(tok + tok + tok);
+          } else {
+            tokenList.push(tok + tok);
+          }
 
           index += 1;
           prevIndex = index + 1;
@@ -46,7 +53,15 @@ export default function token(expression: string): string[] {
         // >= <=
         if ((tok === '>' || tok === '<' || tok === '!') && expression[index + 1] === '=') {
           tokenList.push(expression.slice(prevIndex, index));
-          tokenList.push(tok + '=');
+
+          // !==
+          if (tok === '!' && expression[index + 2] === '=') {
+            index += 1;
+            prevIndex = index + 1;
+            tokenList.push(tok + '==');
+          } else {
+            tokenList.push(tok + '=');
+          }
           index += 1;
           prevIndex = index + 1;
           break;

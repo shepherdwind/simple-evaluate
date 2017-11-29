@@ -28,7 +28,7 @@ evaluate({ a }, '$.a + 1 > 14');
 ### Support operation include
 
 - Math operator `+ - * / %`
-- Comparison `> < >= <= == !=`
+- Comparison `> < >= <= == != === !==`
 - Logical `&& || !`
 - Negation
 

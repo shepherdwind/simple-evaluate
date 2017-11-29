@@ -22,8 +22,12 @@ describe("simple evaluate", () => {
       '12 <= 14',
       '12 >= 14',
       '12 == 14',
+      '12 === 14',
+      '12 === 12',
       '12 % 5 > 3',
       '12 != 14',
+      '12 !== 14',
+      '12 !== 12',
       '9 - 1 > 10 && 3 * 5 > 10',
       '9 - 1 > 10 || 3 * 5 > 10',
     ].map(expression => {
@@ -47,7 +51,10 @@ describe("simple evaluate", () => {
     evaluate({ a: 10, b: 2 }, '$.a > $.b == false').should.equal(false);
     evaluate({ a: 10, b: 2 }, '$.a > $.b == true').should.equal(true);
     evaluate({ a: 'foo' }, '$.a == \'foo\'').should.equal(true);
+    evaluate({ a: 'foo' }, '$.a === \'foo\'').should.equal(true);
     evaluate({ a: 'foo' }, '$.a != \'foo\'').should.equal(false);
+    evaluate({ a: 'foo' }, '$.a !== \'foo\'').should.equal(false);
+    evaluate({ a: 'foo' }, '$.a !== \'fo\'').should.equal(true);
     evaluate({ a: 'foo' }, '$.a == "foo" && 1 > 0').should.equal(true);
 
     evaluate({ a: 'foo' }, '!!$.a').should.equal(true);

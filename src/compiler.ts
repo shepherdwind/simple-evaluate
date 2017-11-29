@@ -11,6 +11,8 @@ export const OPERATION: { [key: string]: number } = {
   '<': 2,
   '>=': 2,
   '<=': 2,
+  '===': 2,
+  '!==': 2,
   '==': 2,
   '!=': 2,
   '&&': 1,
@@ -111,6 +113,12 @@ export default class Compiler {
       case '==':
         // tslint:disable-next-line:triple-equals
         return left == right;
+      case '===':
+        // tslint:disable-next-line:triple-equals
+        return left === right;
+      case '!==':
+        // tslint:disable-next-line:triple-equals
+        return left !== right;
       case '!=':
         // tslint:disable-next-line:triple-equals
         return left != right;
