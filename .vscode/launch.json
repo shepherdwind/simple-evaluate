@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "preLaunchTask": "tsc",
+        "request": "launch",
+        "name": "Jest Tests",
+        "program": "${workspaceRoot}/node_modules/.bin/jest",
+        "args": ["-i", "${file}"],
+        "internalConsoleOptions": "openOnSessionStart",
+        "sourceMaps": true
+      }
+    ]
+  }
