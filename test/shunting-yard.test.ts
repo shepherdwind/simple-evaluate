@@ -1,5 +1,6 @@
 import { evaluate } from "../src/shunting-yard";
 import 'should';
+import 'mocha';
 
 /**
  * Dummy test

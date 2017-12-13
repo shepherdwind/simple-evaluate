@@ -1,5 +1,6 @@
 import evaluate from "../src/simple-evaluate";
 import 'should';
+import 'mocha';
 
 /**
  * Dummy test
