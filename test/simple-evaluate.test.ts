@@ -4,7 +4,7 @@ import 'should';
 /**
  * Dummy test
  */
-describe("simple evaluate", () => {
+describe('simple evaluate', () => {
   it('basic expression', () => {
     const ret = evaluate(null, '1 * (2 + 3 * (4 - 3))');
     ret.should.equal(5);
@@ -70,6 +70,7 @@ describe("simple evaluate", () => {
     gen('$.a() * 2').should.throw(/unknow operation/);
     gen('$.a ** -2').should.throw(/operation must be string/);
     gen('$.a == "1>2"(1 + 2)').should.throw(/operation must be string/);
+    gen('$.a|1').should.throw(/unkonw token/);
   });
 
   it('string parse', () => {
