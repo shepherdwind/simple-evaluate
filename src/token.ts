@@ -1,83 +1,173 @@
-export default function token(expression: string): string[] {
-  let index = 0;
-  let prevIndex = 0;
-  let tokenList = [];
+enum OperationType {
+  // = & |
+  LOGIC = 1,
+  // > < !
+  COMPARISON,
+  // ' "
+  STRING,
+  // + - * /
+  MATH,
+}
 
-  while (expression[index] !== undefined) {
-    const tok = expression[index];
-    switch (tok) {
-      case '=':
-      case '&':
-      case '|':
-        if (expression[index + 1] === tok) {
-          tokenList.push(expression.slice(prevIndex, index));
-          // ===
-          if (tok === '=' && expression[index + 2] === tok) {
-            index += 1;
-            prevIndex = index + 1;
-            tokenList.push(tok + tok + tok);
-          } else {
-            tokenList.push(tok + tok);
-          }
+class Lexer {
+  // current postion
+  private currentIndex = 0;
 
-          index += 1;
-          prevIndex = index + 1;
-        }
-        break;
+  // result token list
+  private tokenList: string[] = [];
 
-      case '\'':
-      case '"':
-        // 字符处理中间遇到其他特殊符号，一直找到后面一个引号或者单引号结束
-        // 不支持转义
-        const bak = index;
-        let next;
-        do {
-          next = expression[index + 1];
-          index += 1;
-        } while(next !== tok && next !== undefined);
+  // input string
+  private input = '';
 
-        tokenList.push(expression.slice(prevIndex, index + 1));
-        prevIndex = index + 1;
-        break;
+  // operation table
+  private optable: {
+    [key: string]: OperationType;
+  } = {
+      '=': OperationType.LOGIC,
+      '&': OperationType.LOGIC,
+      '|': OperationType.LOGIC,
 
-      case '!':
-      case '(':
-      case ')':
-      case '+':
-      case '-':
-      case '*':
-      case '/':
-      case '%':
-      case '>':
-      case '<':
-        // >= <=
-        if ((tok === '>' || tok === '<' || tok === '!') && expression[index + 1] === '=') {
-          tokenList.push(expression.slice(prevIndex, index));
+      '\'': OperationType.STRING,
+      '"': OperationType.STRING,
 
-          // !==
-          if (tok === '!' && expression[index + 2] === '=') {
-            index += 1;
-            prevIndex = index + 1;
-            tokenList.push(tok + '==');
-          } else {
-            tokenList.push(tok + '=');
-          }
-          index += 1;
-          prevIndex = index + 1;
+      '!': OperationType.COMPARISON,
+      '>': OperationType.COMPARISON,
+      '<': OperationType.COMPARISON,
+
+      '(': OperationType.MATH,
+      ')': OperationType.MATH,
+      '+': OperationType.MATH,
+      '-': OperationType.MATH,
+      '*': OperationType.MATH,
+      '/': OperationType.MATH,
+      '%': OperationType.MATH,
+    };
+
+  constructor(expression: string) {
+    this.input = expression;
+  }
+
+  getTokens(): string[] {
+    let tok;
+    do {
+      // read current token, so step should be -1
+      tok = this.pickNext(-1);
+      const pos = this.currentIndex;
+      switch (this.optable[tok]) {
+        case OperationType.LOGIC:
+          // == && || ===
+          this.readLogicOpt(tok);
           break;
-        }
 
-        tokenList.push(expression.slice(prevIndex, index));
-        tokenList.push(tok);
-        prevIndex = index + 1;
-        break;
+        case OperationType.STRING:
+          this.readString(tok);
+          break;
+
+        case OperationType.COMPARISON:
+          this.readCompare(tok);
+          break;
+
+        case OperationType.MATH:
+          this.receiveToken();
+          break;
+
+        default:
+          this.readValue(tok);
+      }
+
+      // if the pos not changed, this loop will go into a infinite loop, every step of while loop,
+      // we must move the pos forward
+      // so here we should throw error, for example `1 & 2`
+      if (pos === this.currentIndex && tok !== undefined) {
+        const err = new Error(`unkonw token ${tok} from input string ${this.input}`);
+        err.name = 'UnknowToken';
+        throw err;
+      }
+    } while (tok !== undefined)
+
+    return this.tokenList;
+  }
+
+  /**
+   * read next token, the index param can set next step, default go foward 1 step
+   * 
+   * @param index next postion
+   */
+  private pickNext(index = 0) {
+    return this.input[index + this.currentIndex + 1];
+  }
+
+  /**
+   * Store token into result tokenList, and move the pos index
+   * 
+   * @param index 
+   */
+  private receiveToken(index = 1) {
+    const tok = this.input.slice(this.currentIndex, this.currentIndex + index).trim();
+    // skip empty string
+    if (tok) {
+      this.tokenList.push(tok);
     }
 
-    index += 1;
+    this.currentIndex += index;
   }
 
-  if (prevIndex < index) {
-    tokenList.push(expression.slice(prevIndex, index + 1));
+  // ' or "
+  private readString(tok: string) {
+    // 字符处理中间遇到其他特殊符号，一直找到后面一个引号或者单引号结束
+    // 不支持转义
+    let next;
+    let index = 0;
+    do {
+      next = this.pickNext(index);
+      index += 1;
+    } while (next !== tok && next !== undefined);
+    this.receiveToken(index + 1);
   }
-  return tokenList.map(o => o.trim()).filter(o => o);
+
+  // > or < or >= or <= or !==
+  // tok in (>, <, !)
+  private readCompare(tok: string) {
+    if (this.pickNext() !== '=') {
+      this.receiveToken(1);
+      return;
+    }
+    // !==
+    if (tok === '!' && this.pickNext(1) === '=') {
+      this.receiveToken(3);
+      return;
+    }
+    this.receiveToken(2);
+  }
+
+  // === or ==
+  // && ||
+  private readLogicOpt(tok: string) {
+    if (this.pickNext() === tok) {
+      // ===
+      if (tok === '=' && this.pickNext(1) === tok) {
+        return this.receiveToken(3);
+      }
+      // == && ||
+      return this.receiveToken(2);
+    }
+  }
+
+  private readValue(tok: string) {
+    if (!tok) {
+      return;
+    }
+
+    let index = 0;
+    while (!this.optable[tok] && tok !== undefined) {
+      tok = this.pickNext(index);
+      index += 1;
+    }
+    this.receiveToken(index);
+  }
+}
+
+export default function token(expression: string): string[] {
+  const lexer = new Lexer(expression);
+  return lexer.getTokens();
 }
