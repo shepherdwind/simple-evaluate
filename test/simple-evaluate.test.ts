@@ -1,10 +1,19 @@
-import evaluate from "../src/simple-evaluate";
+import evaluate, { Compiler, token } from "../src/simple-evaluate";
 import 'should';
 
 /**
  * Dummy test
  */
 describe('simple evaluate', () => {
+  it('compiler', () => {
+    const compiler = new Compiler(token('a.b && c'));
+    const tok = compiler.parse();
+    if (typeof tok === 'string') {
+      throw new Error('token should be node');
+    }
+    tok.operation.should.equal('&&');
+  });
+
   it('basic expression', () => {
     const ret = evaluate(null, '1 * (2 + 3 * (4 - 3))');
     ret.should.equal(5);
@@ -44,6 +53,14 @@ describe('simple evaluate', () => {
     evaluate({ a: 1 }, '-$.a * 2').should.equal(-2);
   });
 
+  it('negative, not $.', () => {
+    evaluate({ a: 1 }, 'a > 0 || $.a < -12').should.equal(true);
+    evaluate({ a: 1 }, 'a > 0 && a < -12').should.equal(false);
+    evaluate({ a: 1 }, 'a + 1 > 0 && - a > -12').should.equal(true);
+    evaluate({ a: 1 }, '-(a + 1) < 0 || -(a + 2) > -12').should.equal(true);
+    evaluate({ a: 1 }, '-a * 2').should.equal(-2);
+  });
+
   it('read var from context', () => {
     evaluate({ a: 10 }, '(9 - 2) * 3 - $.a').should.equal(11);
     evaluate({ a: 10, b: 2 }, '(9 - $.b) * 3 - $.a').should.equal(11);
@@ -62,6 +79,26 @@ describe('simple evaluate', () => {
     evaluate({ a: 'foo' }, '$.a').should.equal('foo');
     evaluate({ a: 'foo' }, '!($.a > "foa") || 1 > 2').should.equal(false);
     evaluate({ a: 'foo' }, '!($.a > "foa") || 1 < 2').should.equal(true);
+  });
+
+  it('read var from context, no ', () => {
+    evaluate({ a: 10 }, '(9 - 2) * 3 - a').should.equal(11);
+    evaluate({ a: 10, b: 2 }, '(9 - b) * 3 - a').should.equal(11);
+    evaluate({ a: 10, b: 2 }, 'a > b').should.equal(true);
+    evaluate({ a: 10, b: 2 }, 'a > b == false').should.equal(false);
+    evaluate({ a: 10, b: 2 }, 'a > b == true').should.equal(true);
+    evaluate({ a: 'foo' }, 'a == \'foo\'').should.equal(true);
+    evaluate({ a: 'foo' }, 'a === \'foo\'').should.equal(true);
+    evaluate({ a: 'foo' }, 'a != \'foo\'').should.equal(false);
+    evaluate({ a: 'foo' }, 'a !== \'foo\'').should.equal(false);
+    evaluate({ a: 'foo' }, 'a !== \'fo\'').should.equal(true);
+    evaluate({ a: 'foo' }, 'a == "foo" && 1 > 0').should.equal(true);
+
+    evaluate({ a: 'foo' }, '!!a').should.equal(true);
+    evaluate({ a: 'foo' }, '!a').should.equal(false);
+    evaluate({ a: 'foo' }, 'a').should.equal('foo');
+    evaluate({ a: 'foo' }, '!(a > "foa") || 1 > 2').should.equal(false);
+    evaluate({ a: 'foo' }, '!(a > "foa") || 1 < 2').should.equal(true);
   });
 
   it('expression which not supported', () => {

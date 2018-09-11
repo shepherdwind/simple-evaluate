@@ -7,3 +7,4 @@ export default function evaluate(context: any, expr: string) {
   const astTree = compiler.parse();
   return compiler.calc(astTree, context);
 }
+export { Compiler, token };

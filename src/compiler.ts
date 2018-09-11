@@ -183,7 +183,7 @@ export default class Compiler {
     }
 
     // 上下文查找
-    if (val.indexOf('$.') === 0) {
+    if (val.indexOf('$.') !== -1) {
       return get(context, val.slice(2));
     }
 
@@ -200,9 +200,14 @@ export default class Compiler {
     if (val === 'false') {
       return false;
     }
+    // is number
+    const value = parseFloat(val);
+    if (!isNaN(value)) {
+      return value;
+    }
 
-    // 其他都算数字
-    return parseFloat(val);
+    // all other lookup from context
+    return get(context, val);
   }
 
   private parseStatement(): string | Node | null {

@@ -38,11 +38,18 @@ You can run those expression, for example:
 evaluate({}, '!$.a > 0');
 evaluate({}, '$.a > 0 || $.a < -12 || 12 + 2*(4 + 4) < 12');
 evaluate({ a: 1 }, '-$.a * 2');
+
+// since 1.2, you can use like this
+evaluate({}, '!a > 0');
+evaluate({}, 'a > 0 || a < -12 || 12 + 2*(4 + 4) < 12');
+evaluate({ a: 1 }, '-a * 2');
 ```
 
 ### context find
 
 `$.` stand for the root value all `context`, value path only support '.', and not support function call.
+
+> since 1.2.0, `$.` is optional. That mean `$.a.b` is equal to `a.b`
 
 ### string and boolean
 
