@@ -22,7 +22,7 @@ A safe parse for simple js expression.
 ```js
 import evaluate from 'simple-evaluate';
 evaluate(null, '12 + 1 > 14');
-evaluate({ a }, '$.a + 1 > 14');
+evaluate({ a }, 'a + 1 > 14');
 ```
 
 ### Support operation include
