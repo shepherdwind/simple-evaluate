@@ -26,15 +26,19 @@ export interface Node {
   grouped?: boolean;
 };
 
+export type GetValueFunction<T = object> = (context: T, path: string) => any;
+
 export default class Compiler {
 
   blockLevel = 0;
-  index = -1;
+  private index = -1;
+  private getValueFn: GetValueFunction;
 
   private token: string[];
 
-  constructor(token: string[]) {
+  constructor(token: string[], getValue?: GetValueFunction) {
     this.token = token;
+    this.getValueFn = getValue || get;
   }
 
   parse(): Node | string {
@@ -184,7 +188,7 @@ export default class Compiler {
 
     // 上下文查找
     if (val.indexOf('$.') !== -1) {
-      return get(context, val.slice(2));
+      return this.getValueFn(context, val.slice(2));
     }
 
     // 字符串
@@ -207,7 +211,7 @@ export default class Compiler {
     }
 
     // all other lookup from context
-    return get(context, val);
+    return this.getValueFn(context, val);
   }
 
   private parseStatement(): string | Node | null {
