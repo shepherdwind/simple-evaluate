@@ -79,6 +79,11 @@ describe('simple evaluate', () => {
     evaluate({ a: 'foo' }, '$.a').should.equal('foo');
     evaluate({ a: 'foo' }, '!($.a > "foa") || 1 > 2').should.equal(false);
     evaluate({ a: 'foo' }, '!($.a > "foa") || 1 < 2').should.equal(true);
+
+    const getValue = (context: object, expr: string) => {
+      return context[expr.split('.')[0]];
+    };
+    evaluate({ a: 'foo' }, 'a.b', { getValue }).should.equal('foo');
   });
 
   it('read var from context, no ', () => {

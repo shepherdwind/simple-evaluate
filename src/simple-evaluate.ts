@@ -1,9 +1,11 @@
 import token from './token';
-import Compiler from './compiler';
+import Compiler, { GetValueFunction } from './compiler';
 
-export default function evaluate(context: any, expr: string) {
+export default function evaluate(context: any, expr: string, option?: {
+  getValue: GetValueFunction;
+}) {
   const tokenList = token(expr);
-  const compiler = new Compiler(tokenList);
+  const compiler = new Compiler(tokenList, option && option.getValue);
   const astTree = compiler.parse();
   return compiler.calc(astTree, context);
 }
