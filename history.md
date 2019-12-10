@@ -1,3 +1,7 @@
+## 1.3.0 2019-12-10
+
+- feat: support custom get value method option [!2](https://github.com/shepherdwind/simple-evaluate/pull/2)
+
 ## 1.2.0 2018-09-11
 
 - feat: context find support ignore `$.`
