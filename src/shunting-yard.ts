@@ -3,7 +3,7 @@
  * @see https://en.wikipedia.org/wiki/Shunting-yard_algorithm
  */
 
-import get from 'get-value';
+const get = require('get-value');
 import { OPERATION } from './compiler';
 import token from './token';
 

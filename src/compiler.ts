@@ -1,4 +1,4 @@
-import get from 'get-value';
+const get = require('get-value');
 
 export const OPERATION: { [key: string]: number } = {
   '!': 5,
