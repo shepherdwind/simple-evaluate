@@ -1,3 +1,7 @@
+## 1.4.0 2019-12-18
+
+- support ternary expression [!3](https://github.com/shepherdwind/simple-evaluate/pull/3)
+
 ## 1.3.1 2019-12-10
 
 - fix build bug

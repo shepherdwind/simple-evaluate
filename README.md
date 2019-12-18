@@ -28,6 +28,7 @@ evaluate({ a }, 'a + 1 > 14');
 ### Support operation include
 
 - Math operator `+ - * / %`
+- ternary expression `a ? b : c`
 - Comparison `> < >= <= == != === !==`
 - Logical `&& || !`
 - Negation
