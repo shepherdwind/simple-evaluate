@@ -17,6 +17,8 @@ export const OPERATION: { [key: string]: number } = {
   '!=': 2,
   '&&': 1,
   '||': 1,
+  '?': 1,
+  ':': 1,
 };
 
 export interface Node {
@@ -127,8 +129,10 @@ export default class Compiler {
         // tslint:disable-next-line:triple-equals
         return left != right;
       case '&&':
+      case '?':
         return left && right;
       case '||':
+      case ':':
         return left || right;
     }
   }

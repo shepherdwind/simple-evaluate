@@ -106,6 +106,11 @@ describe('simple evaluate', () => {
     evaluate({ a: 'foo' }, '!(a > "foa") || 1 < 2').should.equal(true);
   });
 
+  it('ternary expression', () => {
+    evaluate({ a: '10' }, 'a > 11 ? 1 : 0').should.equal(0);
+    evaluate({ a: '12' }, 'a > 11 ? 1 : 0').should.equal(1);
+  });
+
   it('expression which not supported', () => {
     const gen = expression => () => evaluate({ a: 10 }, expression);
     gen('$.a("foo") * 2').should.throw(/unknow expression/);
