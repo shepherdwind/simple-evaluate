@@ -26,6 +26,8 @@ class Lexer {
       '=': OperationType.LOGIC,
       '&': OperationType.LOGIC,
       '|': OperationType.LOGIC,
+      '?': OperationType.LOGIC,
+      ':': OperationType.LOGIC,
 
       '\'': OperationType.STRING,
       '"': OperationType.STRING,
@@ -90,7 +92,7 @@ class Lexer {
 
   /**
    * read next token, the index param can set next step, default go foward 1 step
-   * 
+   *
    * @param index next postion
    */
   private pickNext(index = 0) {
@@ -99,8 +101,8 @@ class Lexer {
 
   /**
    * Store token into result tokenList, and move the pos index
-   * 
-   * @param index 
+   *
+   * @param index
    */
   private receiveToken(index = 1) {
     const tok = this.input.slice(this.currentIndex, this.currentIndex + index).trim();
@@ -150,6 +152,11 @@ class Lexer {
       }
       // == && ||
       return this.receiveToken(2);
+    }
+    // handle as &&
+    // a ? b : c is equal to a && b || c
+    if (tok === '?' || tok === ':') {
+      return this.receiveToken(1);
     }
   }
 
