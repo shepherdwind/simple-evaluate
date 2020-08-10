@@ -1,5 +1,5 @@
 import token from './token';
-import Compiler, { GetValueFunction } from './compiler';
+import Compiler, { GetValueFunction, Node } from './compiler';
 
 export default function evaluate(context: any, expr: string, option?: {
   getValue: GetValueFunction;
@@ -9,4 +9,4 @@ export default function evaluate(context: any, expr: string, option?: {
   const astTree = compiler.parse();
   return compiler.calc(astTree, context);
 }
-export { Compiler, token };
+export { Compiler, token, Node };
