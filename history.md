@@ -1,3 +1,7 @@
+## 1.4.1 2020-08-10
+
+- export Node interface [!3](https://github.com/shepherdwind/simple-evaluate/pull/4)
+
 ## 1.4.0 2019-12-18
 
 - support ternary expression [!3](https://github.com/shepherdwind/simple-evaluate/pull/3)
