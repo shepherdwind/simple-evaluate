@@ -1,6 +1,6 @@
-## 1.4.1 2020-08-10
+## 1.4.2 2020-08-11
 
-- export Node interface [!3](https://github.com/shepherdwind/simple-evaluate/pull/4)
+- export Node interface [!4](https://github.com/shepherdwind/simple-evaluate/pull/4)
 
 ## 1.4.0 2019-12-18
 

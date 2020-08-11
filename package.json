@@ -1,6 +1,6 @@
 {
   "name": "simple-evaluate",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "",
   "keywords": [],
   "main": "dist/simple-evaluate.js",
