@@ -1,3 +1,4 @@
+import evaluate from './simple-evaluate';
 const get = require('get-value');
 
 export const OPERATION: { [key: string]: number } = {
@@ -200,6 +201,10 @@ export default class Compiler {
       return val.slice(1, -1);
     }
 
+    if (val[0] === '`') {
+      return this.parseTemplateString(val.slice(1, -1), context);
+    }
+
     // 布尔
     if (val === 'true') {
       return true;
@@ -216,6 +221,12 @@ export default class Compiler {
 
     // all other lookup from context
     return this.getValueFn(context, val);
+  }
+
+  private parseTemplateString(input: string, context: any) {
+    return input.replace(/\${(.*?)}/g, (_a, b) => {
+      return evaluate(context, b, { getValue: this.getValueFn });
+    });
   }
 
   private parseStatement(): string | Node | null {

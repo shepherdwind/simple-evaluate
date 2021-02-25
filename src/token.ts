@@ -31,6 +31,7 @@ class Lexer {
 
       '\'': OperationType.STRING,
       '"': OperationType.STRING,
+      '`': OperationType.STRING,
 
       '!': OperationType.COMPARISON,
       '>': OperationType.COMPARISON,
