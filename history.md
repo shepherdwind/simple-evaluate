@@ -1,3 +1,7 @@
+## 1.4.3 2021-02-25
+
+- support template string [!6](https://github.com/shepherdwind/simple-evaluate/pull/6)
+
 ## 1.4.2 2020-08-11
 
 - export Node interface [!4](https://github.com/shepherdwind/simple-evaluate/pull/4)

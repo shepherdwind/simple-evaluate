@@ -125,5 +125,8 @@ describe('simple evaluate', () => {
     evaluate({ a: '' }, '$.a == ""').should.equal(true);
     evaluate({ a: '"' }, '$.a == \'"\'').should.equal(true);
     evaluate({ a: '\'a\'' }, '$.a == "\'a\'" && $.a != "a"').should.equal(true);
+    evaluate({ a: 22 }, "'I am ' + a + ' years'").should.equal('I am 22 years');
+    evaluate({ a: 22 }, "`I am ${ a >= 18 ? 'adult' : 'child' }`").should.equal('I am adult');
+    evaluate({ a: 17 }, "`I am ${ a >= 18 ? 'adult' : 'child' }, now ${a} years old`").should.equal('I am child, now 17 years old');
   });
 })
