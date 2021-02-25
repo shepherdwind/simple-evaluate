@@ -36,11 +36,6 @@ evaluate({ a }, 'a + 1 > 14');
 You can run those expression, for example:
 
 ```js
-evaluate({}, '!$.a > 0');
-evaluate({}, '$.a > 0 || $.a < -12 || 12 + 2*(4 + 4) < 12');
-evaluate({ a: 1 }, '-$.a * 2');
-
-// since 1.2, you can use like this
 evaluate({}, '!a > 0');
 evaluate({}, 'a > 0 || a < -12 || 12 + 2*(4 + 4) < 12');
 evaluate({ a: 1 }, '-a * 2');
@@ -54,9 +49,17 @@ evaluate({ a: 1 }, '-a * 2');
 
 ### string and boolean
 
-String and boolean support, string start with `' | "`, just the same as javascript expresion.
+String and boolean support, string start with `' | "`, just the same as javascript expression.
 
 Boolean use two key words, `true | false`.
+
+### template string
+
+You can use template string, just like the javascript syntax, for example.
+
+```js
+evaluate({ a: 22 }, "`I am ${ a >= 18 ? 'adult' : 'child' }`").should.equal('I am adult');
+```
 
 ### Operation no support
 
@@ -65,6 +68,5 @@ Boolean use two key words, `true | false`.
 So, you can not run those expression
 
 ```js
-evaluation({}, '-$.a > 0');
-evaluation({}, '$.a(1) > 0');
+evaluation({}, 'a(1) > 0');
 ```
