@@ -45,6 +45,10 @@ describe('simple evaluate', () => {
     });
   });
 
+  it('test %', () => {
+    evaluate(null, '4 % 2').should.equal(0);
+  });
+
   it('negative', () => {
     evaluate({ a: 1 }, '$.a > 0 || $.a < -12').should.equal(true);
     evaluate({ a: 1 }, '$.a > 0 && $.a < -12').should.equal(false);

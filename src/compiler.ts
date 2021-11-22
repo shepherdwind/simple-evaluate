@@ -111,6 +111,8 @@ export default class Compiler {
         return left - right;
       case '>':
         return left > right;
+      case '%':
+        return left % right;
       case '<':
         return left < right;
       case '>=':

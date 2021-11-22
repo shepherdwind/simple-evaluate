@@ -1,3 +1,6 @@
+## 1.4.4 2021-11-22
+
+- fix missing % operation support [#7](https://github.com/shepherdwind/simple-evaluate/issues/7)
 ## 1.4.3 2021-02-25
 
 - support template string [!6](https://github.com/shepherdwind/simple-evaluate/pull/6)
