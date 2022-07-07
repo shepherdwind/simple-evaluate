@@ -253,7 +253,13 @@ export default class Compiler {
     }
 
     // 3 > -12 or -12 + 10
-    if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
+    const prevToken = this.prevToken();
+    const isNegativeOperation = () => OPERATION[prevToken] > 0 ||
+      prevToken === undefined ||
+      prevToken === '('
+    ;
+
+    if (token === '-' && isNegativeOperation()) {
       return { left: '0', operation: token, right: this.parseStatement(), grouped: true };
     }
 

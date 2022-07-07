@@ -133,4 +133,11 @@ describe('simple evaluate', () => {
     evaluate({ a: 22 }, "`I am ${ a >= 18 ? 'adult' : 'child' }`").should.equal('I am adult');
     evaluate({ a: 17 }, "`I am ${ a >= 18 ? 'adult' : 'child' }, now ${a} years old`").should.equal('I am child, now 17 years old');
   });
+
+  it('issues', () => {
+    evaluate({}, '(-2*(1+5))+(3*(3+5))+(2*(3+1))-4.36').should.equal(15.64);
+    const exp = '(-0.02*(1+5+3+1+5+3+1))+(0.07*(3+5+3+3+3+1+3+0))+(0.15*(3+1+5+1+5+3+1))-4.36';
+    /* tslint:disable */ 
+    evaluate({}, exp).should.equal(eval(exp));
+  });
 })
