@@ -8,14 +8,14 @@
       "es2017",
       "dom"
     ],
-    "strict": true,
     "sourceMap": true,
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declarationDir": "dist/types",
-    "outDir": "dist/"
+    "outDir": "dist/",
+    "skipLibCheck": true
   },
   "include": [
     "src"

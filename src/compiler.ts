@@ -45,7 +45,7 @@ export default class Compiler {
   }
 
   parse(): Node | string {
-    let tok;
+    let tok: Node | string;
     let root: any = {
       left: null,
       right: null,
@@ -185,7 +185,10 @@ export default class Compiler {
 
 
   private getValue(val: string | Node | null, context: any) {
-    if (typeof val !== 'string' && val !== null) {
+    if (typeof val !== 'string') {
+      if (val === null) {
+        throw new Error('unknow value ' + val);
+      }
       return this.calc(val, context);
     }
 
@@ -252,8 +255,14 @@ export default class Compiler {
       return { left: null, operation: token, right: this.parseStatement() }
     }
 
-    // 3 > -12 or -12 + 10
-    if (token === '-' && (OPERATION[this.prevToken()] > 0 || this.prevToken() === undefined)) {
+    // 3 > -12 or -12 + 10 or (-1 + 2) condition
+    const prevToken = this.prevToken();
+    const isNegativeOperation = () => OPERATION[prevToken] > 0 ||
+      prevToken === undefined ||
+      prevToken === '('
+    ;
+
+    if (token === '-' && isNegativeOperation()) {
       return { left: '0', operation: token, right: this.parseStatement(), grouped: true };
     }
 
