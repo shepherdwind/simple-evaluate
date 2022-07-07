@@ -1,3 +1,7 @@
+## 1.4.5 2022-07-07
+
+- fix negative operation recognition logic bug [!10](https://github.com/shepherdwind/simple-evaluate/pull/10)
+
 ## 1.4.4 2021-11-22
 
 - fix missing % operation support [#7](https://github.com/shepherdwind/simple-evaluate/issues/7)
