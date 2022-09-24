@@ -1,3 +1,7 @@
+## 1.4.6 2022-09-24
+
+- fix: ternary expression calculation logic correction [#11](https://github.com/shepherdwind/simple-evaluate/issues/11)
+
 ## 1.4.5 2022-07-07
 
 - fix negative operation recognition logic bug [!10](https://github.com/shepherdwind/simple-evaluate/pull/10)
