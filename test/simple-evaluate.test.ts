@@ -113,6 +113,11 @@ describe('simple evaluate', () => {
   it('ternary expression', () => {
     evaluate({ a: '10' }, 'a > 11 ? 1 : 0').should.equal(0);
     evaluate({ a: '12' }, 'a > 11 ? 1 : 0').should.equal(1);
+    evaluate({ a: '0' }, '0 == 0 ? 0 : 1').should.equal(0);
+
+    const gen = (expression: string) => () => evaluate({ a: 10 }, expression);
+    gen('0 == 0 > 0 : 1').should.throw('bad teranry before : should be ? , but get >');
+    gen('0 : 1').should.throw('bad teranry expression 0 :');
   });
 
   it('expression which not supported', () => {

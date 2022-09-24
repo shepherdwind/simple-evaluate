@@ -93,6 +93,10 @@ export default class Compiler {
       return !this.getValue(node.right, context);
     }
 
+    if (node.operation === ':') {
+      return this.calcTernary(node.left, node.right, context);
+    }
+
     const left = this.getValue(node.left, context);
     if (node.operation === undefined) {
       return left;
@@ -132,10 +136,8 @@ export default class Compiler {
         // tslint:disable-next-line:triple-equals
         return left != right;
       case '&&':
-      case '?':
         return left && right;
       case '||':
-      case ':':
         return left || right;
     }
   }
@@ -267,5 +269,18 @@ export default class Compiler {
     }
 
     return token;
+  }
+
+  private calcTernary(left: Node | string, right: Node | string, context: any) {
+    if (typeof left === 'string') {
+      throw new Error(`bad teranry expression ${left} :`);
+    }
+
+    if (left.operation !== '?') {
+      throw new Error('bad teranry before : should be ? , but get ' + left.operation);
+    }
+
+    const condition = this.getValue(left.left, context);
+    return condition ? this.getValue(left.right, context) : this.getValue(right, context);
   }
 }
